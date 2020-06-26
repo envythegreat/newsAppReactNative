@@ -35,36 +35,19 @@ class Headlines extends Component{
       }
     }
     componentDidMount() {
-      
-      if(this.props.path == '/v2/top-headlines') {
-        getCurrentnews(this.props.path, {country: this.props.country, pageSize:this.props.pageSize})
-          .then(response => {
-            this.setState({
-              articles: response.articles,
-              stillLoading: false,
-            })
-            const firstArticle = this.state.articles.shift();
-            this.setState({
-              breakingArticle: firstArticle,
-            })
-          }).catch(err => {
-              console.log('current error', err);
-          });
-      } else if (this.props.path == '/v2/everything') {
-        getCurrentnews(this.props.path, {q: this.props.category, from: this.props.from, to: this.props.to, pageSize: this.props.pageSize})
-          .then(response => {
-            this.setState({
-              articles: response.articles,
-              stillLoading: false,
-            })
-            const firstArticle = this.state.articles.shift();
-            this.setState({
-              breakingArticle: firstArticle,
-            })
-          }).catch(err => {
-              console.log('current error', err);
-          });
-      }
+      getCurrentnews(this.props.path, {country: this.props.country, pageSize:this.props.pageSize})
+        .then(response => {
+          this.setState({
+            articles: response.articles,
+            stillLoading: false,
+          })
+          const firstArticle = this.state.articles.shift();
+          this.setState({
+            breakingArticle: firstArticle,
+          })
+        }).catch(err => {
+            console.log('current error', err);
+        });
       this.preformSearch('lifeStyles', 'fr');
       this.preformSearch('politique', 'fr');
       this.preformSearch('Voyage', 'fr');
@@ -98,6 +81,7 @@ class Headlines extends Component{
           console.log('current error', err);
         });
     }		
+
   render() {
 		if (this.state.stillLoading) {
 			return (
@@ -131,11 +115,11 @@ class Headlines extends Component{
 					</View>
 					{/* Breaking news */}
 					<BreakingCard 
-										articleImg={this.state.breakingArticle.urlToImage}
-                    ArticleTitle={this.state.breakingArticle.title}
-                    ArticleDesc={this.state.breakingArticle.description ? this.state.breakingArticle.description : this.state.breakingArticle.content}
-                    ArticleUrl={this.state.breakingArticle.url}
-                    onPressArt={this.handleArticleOnPress}
+						articleImg={this.state.breakingArticle.urlToImage}
+            ArticleTitle={this.state.breakingArticle.title}
+            ArticleDesc={this.state.breakingArticle.description ? this.state.breakingArticle.description : this.state.breakingArticle.content}
+            ArticleUrl={this.state.breakingArticle.url}
+            onPressArt={this.handleArticleOnPress}
 					/>
 					{/** End Breaking News */}
           <CarouselSlider articlesData={this.state.articles} SLIDER_WIDTH={SLIDER_WIDTH} ITEM_WIDTH={ITEM_WIDTH} _renderItem={_renderItem} Title={'Top Stories'} />
