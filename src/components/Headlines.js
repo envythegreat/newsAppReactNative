@@ -1,11 +1,11 @@
 import React, {Component} from 'react'
 import {Image, View, Text, StyleSheet, Dimensions} from 'react-native'
 import { Container, Content} from 'native-base';
-import getNews from '../config/Api'
 import ArticleModal from '../modal/ArticleModal'
 import BreakingCard from '../cards/BreakingCard'
 import SmallArticleCard from '../cards/SmallArticleCard';
 import CarouselSlider from './CarouselSlider'
+import {getCurrentnews} from '../config/functions';
 
 const SLIDER_WIDTH = Dimensions.get('window').width;
 const ITEM_WIDTH = Math.round(SLIDER_WIDTH * 0.7);
@@ -22,14 +22,22 @@ class Headlines extends Component{
 				articleData : {},
 				activeIndex:0,
 				breakingArticle: {},
-				lifeStyles: [],
+        lifeStyles: [],
+        politique: [],
+        Voyage: [],
+        films: [],
+        listCat: [
+          'lifestyles',
+          'politique',
+          'voyage',
+          'films'
+        ]
       }
     }
-
     componentDidMount() {
       
       if(this.props.path == '/v2/top-headlines') {
-        this.getCurrentnews(this.props.path, {country: this.props.country, pageSize:this.props.pageSize})
+        getCurrentnews(this.props.path, {country: this.props.country, pageSize:this.props.pageSize})
           .then(response => {
             this.setState({
               articles: response.articles,
@@ -43,7 +51,7 @@ class Headlines extends Component{
               console.log('current error', err);
           });
       } else if (this.props.path == '/v2/everything') {
-        this.getCurrentnews(this.props.path, {q: this.props.category, from: this.props.from, to: this.props.to, pageSize: this.props.pageSize})
+        getCurrentnews(this.props.path, {q: this.props.category, from: this.props.from, to: this.props.to, pageSize: this.props.pageSize})
           .then(response => {
             this.setState({
               articles: response.articles,
@@ -57,16 +65,10 @@ class Headlines extends Component{
               console.log('current error', err);
           });
       }
-      
-      this.getCurrentnews('/v2/everything', {q: 'Lifestyle',language: 'fr'})
-        .then(response => {
-          this.setState({
-            lifeStyles: response.articles,
-          })
-          // console.log(this.state.lifeStyles);
-        }).catch(err => {
-              console.log('current error', err);
-          });
+      this.preformSearch('lifeStyles', 'fr');
+      this.preformSearch('politique', 'fr');
+      this.preformSearch('Voyage', 'fr');
+      this.preformSearch('films', 'fr');
     }
 
     handleArticleOnPress = (dataArticle) => {
@@ -83,13 +85,19 @@ class Headlines extends Component{
       })
     }
 
-
-
-    getCurrentnews = (path,{country, category, source, q, from, to, pageSize, language}) => {
-      return getNews(path, {country, category, source, q, from, to, pageSize, language})
-        .then(response => response.json())
-		}
-		
+    preformSearch = (query, lang) => {
+      getCurrentnews('/v2/everything', {q: query, language: lang})
+        .then(response => {
+          if(this.state.listCat.indexOf(query.toLowerCase()) > -1 ){
+            this.setState({
+              [query]: response.articles,
+            })
+          }
+          // console.log(this.state.lifeStyles);
+        }).catch(err => {
+          console.log('current error', err);
+        });
+    }		
   render() {
 		if (this.state.stillLoading) {
 			return (
@@ -130,20 +138,11 @@ class Headlines extends Component{
                     onPressArt={this.handleArticleOnPress}
 					/>
 					{/** End Breaking News */}
-					{/** Top Stories End */}
-					<View>
-						<Text style={styles.news}>Top Stories</Text>
-					</View>
-					<View style={{ flex: 1, flexDirection:'row', justifyContent: 'center', }}>
-            <CarouselSlider articlesData={this.state.articles} SLIDER_WIDTH={SLIDER_WIDTH} ITEM_WIDTH={ITEM_WIDTH} _renderItem={_renderItem}/>
-          </View>
-					{/** End Top Stories */}
-					<View>
-						<Text style={styles.news}>Lifestyle</Text>
-					</View>
-          <View style={{ flex: 1, flexDirection:'row', justifyContent: 'center', }}>
-            <CarouselSlider articlesData={this.state.lifeStyles} SLIDER_WIDTH={SLIDER_WIDTH} ITEM_WIDTH={ITEM_WIDTH} _renderItem={_renderItem}/>
-          </View>
+          <CarouselSlider articlesData={this.state.articles} SLIDER_WIDTH={SLIDER_WIDTH} ITEM_WIDTH={ITEM_WIDTH} _renderItem={_renderItem} Title={'Top Stories'} />
+          <CarouselSlider articlesData={this.state.lifeStyles} SLIDER_WIDTH={SLIDER_WIDTH} ITEM_WIDTH={ITEM_WIDTH} _renderItem={_renderItem} Title={'Lifestyle'} />
+          <CarouselSlider articlesData={this.state.politique} SLIDER_WIDTH={SLIDER_WIDTH} ITEM_WIDTH={ITEM_WIDTH} _renderItem={_renderItem} Title={'Politique'} />
+          <CarouselSlider articlesData={this.state.Voyage} SLIDER_WIDTH={SLIDER_WIDTH} ITEM_WIDTH={ITEM_WIDTH} _renderItem={_renderItem} Title={'Voyage'} />
+          <CarouselSlider articlesData={this.state.films} SLIDER_WIDTH={SLIDER_WIDTH} ITEM_WIDTH={ITEM_WIDTH} _renderItem={_renderItem} Title={'Films'} />
 				</Content>
 
             
