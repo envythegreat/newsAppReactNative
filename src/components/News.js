@@ -1,9 +1,13 @@
 import React, {Component} from 'react'
-import {Image,StyleSheet} from 'react-native'
+import {Image,StyleSheet,Dimensions, FlatList} from 'react-native'
 import { Container, Content} from 'native-base';
 import ArticleModal from '../modal/ArticleModal'
 import {getCurrentnews} from '../config/functions';
-import Newslist from './Newslist'
+import SmallArticleCard from '../cards/SmallArticleCard'
+
+const SLIDER_WIDTH = Dimensions.get('window').width;
+const ITEM_WIDTH = Math.round(SLIDER_WIDTH * 0.7) - 85;
+const ITEM_HEIGHT = Math.round(ITEM_WIDTH * 3 / 4) *1.9;
 
 class NewsList extends Component{
     constructor(props) {
@@ -59,21 +63,27 @@ class NewsList extends Component{
 			)
     }
     
-		const newsList = this.state.articles.map((item, index) => {
-			return <Newslist 
+		const newsList = ({item, index}) => {
+			return <SmallArticleCard 
 							articleImg={item.urlToImage}
 							ArticleTitle={item.title}
 							ArticleDesc={item.description ? item.description : item.content}
 							ArticleUrl={item.url}
-							onPressArt={this.handleArticleOnPress}
 							key={index}
+							onPressArt={this.handleArticleOnPress}
+							style={{width: ITEM_WIDTH, height: ITEM_HEIGHT}}
 						/>
-		})
+		}
     return(
-			<Container style={{backgroundColor:'#fff'}}>
-      	<Content>
-					{newsList}
-				</Content>
+			<Container style={{backgroundColor:'#fff',marginBottom: 150}}>
+      	{/* <Content> */}
+				<FlatList 
+					data={this.state.articles}
+					renderItem={newsList}
+					numColumns={2}
+					keyExtractor={(item, index) => 'key'+index}
+				/>
+				{/* </Content> */}
         <ArticleModal 
           showModal={this.state.modalVisibility}
           articleData={this.state.articleData}

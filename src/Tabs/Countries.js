@@ -12,11 +12,11 @@ const MyCountryList = Country.map((item, index) => {
 })
 
 
-export default function Article() {
+export default function Countries() {
 
   return (
       // <SafeAreaView>
-        <Container style={{backgroundColor:'#696969'}}>
+        <Container style={{backgroundColor:'#fff'}}>
           <Header title={'Other News'}/>
           <Content style={{marginTop:10}}>
             <List itemDivider={false}>

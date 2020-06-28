@@ -1,8 +1,8 @@
-import React , {Component} from 'react';
+import React , {Component, PureComponent} from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 import Carousel from 'react-native-snap-carousel';
 
-export default class CarouselSlider extends Component {
+export default class CarouselSlider extends PureComponent {
 	constructor(props) {
 		super(props)
 		this.state = {
@@ -24,7 +24,7 @@ export default class CarouselSlider extends Component {
 						itemWidth={this.props.ITEM_WIDTH}
 						renderItem={this.props._renderItem}
 						onSnapToItem = { index => this.setState({activeIndex:index}) }
-						loop
+						loop={true}
 					/>
 				</View>
 			</>

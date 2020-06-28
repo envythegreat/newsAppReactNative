@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React, {Component, PureComponent} from 'react'
 import {Image, View, Text, StyleSheet, Dimensions} from 'react-native'
 import { Container, Content} from 'native-base';
 import ArticleModal from '../modal/ArticleModal'
@@ -12,7 +12,7 @@ const ITEM_WIDTH = Math.round(SLIDER_WIDTH * 0.7);
 const ITEM_HEIGHT = Math.round(ITEM_WIDTH * 3 / 4);
 
 
-class Headlines extends Component{
+class Headlines extends PureComponent{
     constructor(props) {
       super(props);
       this.state = {

@@ -8,7 +8,7 @@ import { Root } from "native-base";
 import * as Font from 'expo-font';
 import { AppLoading } from 'expo';
 import Home from './src/Tabs/Home';
-import Article from './src/Tabs/Article';
+import Countries from './src/Tabs/Countries';
 import Today from './src/Tabs/Today';
 
 
@@ -41,11 +41,12 @@ async componentDidMount() {
             <Tab.Navigator
               initialRouteName="Today"
               tabBarOptions={{
-                activeTintColor: 'snow',
-                inactiveBackgroundColor: '#696969',
-                activeBackgroundColor:'#696969',
+                activeTintColor: 'red',
+                inactiveBackgroundColor: '#fff',
+                activeBackgroundColor:'#fff',
+                inactiveTintColor: '#000',
                 style:{
-                  backgroundColor: '#696969'
+                  backgroundColor: '#fff'
                 }
               }}
             >
@@ -70,8 +71,8 @@ async componentDidMount() {
                 }}
               />
               <Tab.Screen
-                name="Account"
-                component={Article} 
+                name="Countries"
+                component={Countries} 
                 options={{
                   tabBarLabel: 'Other News',
                   tabBarIcon: ({ color, size }) => (
