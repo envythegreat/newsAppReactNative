@@ -4,7 +4,7 @@ import {Container, Tabs, Tab,ScrollableTab } from "native-base";
 import Headlines from '../components/Headlines'
 import Header from '../components/Header'
 import {getTime} from '../config/functions'
-import NewsList from '../components/News'
+import News from '../components/News'
 
 export default class Home extends Component {
 
@@ -17,7 +17,7 @@ export default class Home extends Component {
     const to = 0;
     const newTabList = tabList.map((item, index ) => {
       return <Tab heading={item.cat} tabStyle={{backgroundColor:'#fff'}} activeTabStyle={{backgroundColor:'#fff', fontWeight: 'bold'}} textStyle={{color:'black'}} activeTextStyle={{color:'red'}} key={index}>
-              <NewsList path={'/v2/everything'} category={item.cat.toLowerCase()}  from={getTime({minusdays: from})} to={getTime({minusdays:to})}  pageSize={pagesize} /> 
+              <News path={'/v2/everything'} category={item.cat.toLowerCase()}  from={getTime({minusdays: from})} to={getTime({minusdays:to})}  pageSize={pagesize} /> 
             </Tab>
     })
     return (

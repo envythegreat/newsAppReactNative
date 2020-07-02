@@ -7,13 +7,13 @@ import Header from '../components/Header'
 
 
 
-const MyCountryList = Country.map((item, index) => {
-       return <Countrylist name={item.Name} icon={item.icon} code={item.Code} key={index} />
-})
 
 
-export default function Countries() {
 
+export default function Countries({navigation}) {
+  const MyCountryList = Country.map((item, index) => {
+    return <Countrylist name={item.Name} icon={item.icon} code={item.Code} key={index} navigation={navigation} lang={item.lang}/>
+  })
   return (
       // <SafeAreaView>
         <Container style={{backgroundColor:'#fff'}}>

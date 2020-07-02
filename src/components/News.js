@@ -9,7 +9,7 @@ const SLIDER_WIDTH = Dimensions.get('window').width;
 const ITEM_WIDTH = Math.round(SLIDER_WIDTH * 0.7) - 85;
 const ITEM_HEIGHT = Math.round(ITEM_WIDTH * 3 / 4) *1.9;
 
-class NewsList extends Component{
+class News extends Component{
     constructor(props) {
       super(props);
       this.state = {
@@ -103,4 +103,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default NewsList;
+export default News;
