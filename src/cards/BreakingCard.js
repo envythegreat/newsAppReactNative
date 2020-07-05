@@ -1,70 +1,84 @@
 import React, { Component } from "react";
-import { StyleSheet, View, ImageBackground, TouchableOpacity, Share } from "react-native";
+import { StyleSheet, View, ImageBackground, TouchableOpacity, Share, Platform } from "react-native";
 import {Text} from 'native-base'
-import Icon from "react-native-vector-icons/MaterialIcons";
+import { FontAwesome5 } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import {handleViewPress, handleShare} from '../config/functions';
 
-function BreakingCard({articleImg, ArticleTitle, ArticleDesc, ArticleUrl, onPressArt}) {
-  const img = articleImg ? articleImg : `https://vl-media.fr/wp-content/uploads/2018/05/news.jpg`;
-  // console.log(articleImg)
-  function handleViewPress(){
-    let url = ArticleUrl;
-    let title = ArticleTitle;
-    onPressArt({url, title})
+
+class BreakingCard extends Component {
+  constructor(props){
+    super(props)
+    this.handleViewPress = () => {
+      handleViewPress(this.props.ArticleUrl, this.props.ArticleTitle, this.props.onPressArt)
+    }
+    this.handleShare = () => {
+      handleShare(this.props.ArticleUrl, this.props.ArticleTitle)
+    }
   }
-  function handleShare(){
-    // console.log(ArticleTitle)
-    const  data = {
-                    title: ArticleTitle, 
-                    url: ArticleUrl
-                  }
-		let message = `${data.title}\n\nRead More @${data.url}\n\nShared via RN News App`;
-		return Share.share(
-			{title: data.title , url: data.url},
-			{dialogTitle:`Share ${message}`}
-		);
-	}
-  return (
-    <View style={styles.container}>
-      <ImageBackground
-        source={{uri: `${img}`}}
-        resizeMode="cover"
-        style={styles.image}
-        imageStyle={styles.image_imageStyle}
-      >
-        <View style={styles.group}>
-          <View style={styles.rect2}>
-            <View style={styles.iconStack}>
-              <Icon name="whatshot" style={styles.icon}></Icon>
-              <Text style={styles.breaking}>Breaking</Text>
-            </View>
-          </View>
-        </View>
-        <View style={styles.group4}>
-          <View style={styles.group2Row}>
-              <View style={styles.rect3}>
-                <Text style={styles.loremIpsum} note numberOfLines={3}>{ArticleTitle}</Text>
-            </View>
-            <View style={styles.group3}>
-              <View style={[styles.container, styles.untitledComponent12]}>
-                <TouchableOpacity style={styles.button2} onPress={handleShare}>
-                  {/* <Icon name={} style={styles.icon2}></Icon> */}
-                  <MaterialCommunityIcons name="share" style={styles.icon2} />
-                </TouchableOpacity>
-              </View>
 
-              <View style={[styles.container, styles.untitledComponent12]}>
-                <TouchableOpacity style={styles.button2} onPress={handleViewPress}>
-                  {/* <Icon name={} style={styles.icon2}></Icon> */}
-                  <MaterialCommunityIcons name="open-in-new" style={styles.icon2} />
-                </TouchableOpacity>
+  // function handleViewPress(){
+  //   let url = ArticleUrl;
+  //   let title = ArticleTitle;
+  //   onPressArt({url, title})
+  // }
+  // function handleShare(){
+  //   const  data = {title: ArticleTitle, url: ArticleUrl}
+	// 	let message = `${data.title}\n\nRead More @${data.url}\n\nShared via RN News App`;
+	// 	return Share.share(
+	// 		{title: data.title , url: data.url},
+	// 		{dialogTitle:`Share ${message}`}
+	// 	);
+  // }
+  render() {
+    const {articleImg, ArticleTitle, ArticleDesc} = this.props;
+    const img = articleImg ? articleImg : `https://vl-media.fr/wp-content/uploads/2018/05/news.jpg`;
+    return (
+      <View style={styles.container}>
+        <ImageBackground
+          source={{uri: `${img}`}}
+          resizeMode="cover"
+          style={styles.image}
+          imageStyle={styles.image_imageStyle}
+        >
+          <View style={styles.group}>
+            <View style={styles.rect2}>
+              <View style={styles.iconStack}>
+                <FontAwesome5 name="hotjar" size={35} color="rgba(240,91,91,1)" />
+                <Text style={styles.breaking}>Breaking</Text>
               </View>
             </View>
           </View>
-        </View>
-      </ImageBackground>
-    </View>
-  );
+
+            <TouchableOpacity style={[styles.SaveBtn, {marginLeft: 'auto'}]} onPress={this.handleShare}>
+              <FontAwesome5 name="bookmark" size={30} color="rgba(240,91,91,1)" />
+            </TouchableOpacity>
+
+          <View style={styles.group4}>
+            <View style={styles.group2Row}>
+              <View style={styles.rect3}>
+                <Text style={styles.loremIpsum} note numberOfLines={3}>{ArticleTitle ? ArticleTitle : ArticleDesc}</Text>
+              </View>
+              <View style={styles.group3}>
+                <View style={styles.touchableIcon}>
+                  <TouchableOpacity style={styles.button2} onPress={this.handleShare}>
+                    <MaterialCommunityIcons name="share" style={styles.icon2} />
+                  </TouchableOpacity>
+                </View>
+
+                <View style={styles.touchableIcon}>
+                  <TouchableOpacity style={styles.button2} onPress={this.handleViewPress}>
+                    {/* <Icon name={} style={styles.icon2}></Icon> */}
+                    <MaterialCommunityIcons name="open-in-new" style={styles.icon2} />
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </View>
+          </View>
+        </ImageBackground>
+      </View>
+    );
+  }
 }
 
 const styles = StyleSheet.create({
@@ -91,13 +105,13 @@ const styles = StyleSheet.create({
     width: 133,
     height: 52,
     marginTop: 9,
-    marginLeft: 5
+    marginLeft: 5,
   },
   rect2: {
-    width: 133,
+    width: '100%',
     height: 52,
     backgroundColor: "#E6E6E6",
-    borderRadius: 31
+    borderRadius: 31,
   },
   icon: {
     top: 0,
@@ -123,7 +137,7 @@ const styles = StyleSheet.create({
     marginLeft: 11
   },
   group4: {
-    width: 321,
+    width: '100%',
     height: 66,
     flexDirection: "row",
     marginTop: 113,
@@ -134,29 +148,30 @@ const styles = StyleSheet.create({
     height: 66
   },
   rect3: {
-    width: 275,
+    width: Platform.OS === 'ios' ? '75%' : '80%',
     height: 66,
     backgroundColor: "#000",
-		borderRadius: 10,
+    borderRadius: 10,
 		// opacity: 0.5,
   },
   loremIpsum: {
     fontFamily: "Roboto_regular",
     color: "#fff",
 		fontSize: 15,
-		padding: 5,
+    padding: 5,
+    textAlign: 'center',
 		fontWeight: '800'
   },
   group3: {
     width: 26,
     height: 66,
-    marginLeft: 19
+    marginLeft: Platform.OS === 'ios' ? 19 : 20
   },
   untitledComponent1: {
     height: 26,
     width: 26
   },
-  untitledComponent12: {
+  touchableIcon: {
     width: 26,
     height: 26,
     marginTop: 3
@@ -176,6 +191,11 @@ const styles = StyleSheet.create({
     color: "snow",
     fontSize: 25,
     padding: 1,
+  },
+  SaveBtn: {
+    position: 'absolute',
+    right: 20,
+    top: 10,
   }
 });
 

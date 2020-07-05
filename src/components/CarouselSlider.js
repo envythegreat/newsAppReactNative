@@ -24,7 +24,6 @@ export default class CarouselSlider extends PureComponent {
 						itemWidth={this.props.ITEM_WIDTH}
 						renderItem={this.props._renderItem}
 						onSnapToItem = { index => this.setState({activeIndex:index}) }
-						loop={true}
 					/>
 				</View>
 			</>

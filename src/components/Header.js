@@ -1,13 +1,12 @@
-import React, { Component } from "react";
-import { StyleSheet, View, Text, Image, StatusBar } from "react-native";
+import React from "react";
+import { StyleSheet, View, Image, StatusBar, Platform } from "react-native";
 
 function Header(props) {
   return (
     <View style={[styles.container, props.style]}>
-    <StatusBar barStyle="dark-content" />
+    <StatusBar barStyle={Platform.OS === 'ios' ? 'dark-content' : 'default'} />
       <View style={styles.rect4}>
         <Image source={require('../../assets/logo.png')} style={styles.logoImgae} />
-        {/* <Text style={styles.news}>{props.title}</Text> */}
       </View>
     </View>
   );
@@ -16,20 +15,13 @@ function Header(props) {
 const styles = StyleSheet.create({
   container: {},
   rect4: {
-    height: 143,
     backgroundColor: "#fff",
     borderBottomRightRadius: 0,
     borderBottomLeftRadius: 0,
-    // shadowColor: "rgba(0,0,0,1)",
-    // shadowOffset: {
-    //   width: 0,
-    //   height: 5
-    // },
-    // elevation: 60,
     shadowOpacity: 0.25,
-    // shadowRadius: 20,
     flexDirection: 'row',
-    justifyContent:'center'
+    justifyContent:'center',
+    width: '100%'
   },
   news: {
     color: "#fff",
@@ -42,15 +34,11 @@ const styles = StyleSheet.create({
   },
   logoImgae:{
     height: 70,
-    width: 70,
-    // flex: 1,
+    width: Platform.OS === 'ios' ? 70 : 130,
     overflow: 'visible',
-    // alignItems: 'center',
     justifyContent: 'center',
-    marginTop: '18%',
+    marginTop: Platform.OS === 'ios' ? '18%' : '8%',
     bottom: 0
-    // marginLeft: 60,
-
   }
 });
 

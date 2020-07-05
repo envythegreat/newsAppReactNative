@@ -5,7 +5,7 @@ import ArticleModal from '../modal/ArticleModal'
 import BreakingCard from '../cards/BreakingCard'
 import SmallArticleCard from '../cards/SmallArticleCard';
 import CarouselSlider from './CarouselSlider'
-import {getCurrentnews} from '../config/functions';
+import {getCurrentnews, handleArticleOnPress, handleModalClose} from '../config/functions';
 
 const SLIDER_WIDTH = Dimensions.get('window').width;
 const ITEM_WIDTH = Math.round(SLIDER_WIDTH * 0.7);
@@ -33,8 +33,15 @@ class Headlines extends PureComponent{
           'films'
         ]
       }
+      // i was hard stuck at this trying to call those function and i keep getting this error : 
+      // undefined is not an object (evaluating 'this.setstate')
+      // i think this is because you have declared a function and it get executed before
+      // the component gets mounted which means there is no setState yet
+      // check https://github.com/goatslacker/alt/issues/283
+      this.handleArticleOnPress = handleArticleOnPress.bind(this);
+      this.handleModalClose = handleModalClose.bind(this);
     }
-    componentDidMount() {
+    async componentDidMount() {
       getCurrentnews(this.props.path, {country: this.props.country, pageSize:this.props.pageSize})
         .then(response => {
           this.setState({
@@ -54,22 +61,22 @@ class Headlines extends PureComponent{
       this.preformSearch('films', 'fr');
     }
 
-    handleArticleOnPress = (dataArticle) => {
-      this.setState({
-        modalVisibility: true,
-        articleData: dataArticle
-      })
-    }
+    // handleArticleOnPress = (dataArticle) => {
+    //   this.setState({
+    //     modalVisibility: true,
+    //     articleData: dataArticle
+    //   })
+    // }
 
-    handleModalClose = () => {
-      this.setState({
-        modalVisibility: false,
-        articleData: {}
-      })
-    }
+    // handleModalClose = () => {
+    //   this.setState({
+    //     modalVisibility: false,
+    //     articleData: {}
+    //   })
+    // }
 
-    preformSearch = (query, lang) => {
-      getCurrentnews('/v2/everything', {q: query, language: lang})
+    preformSearch = async (query, lang) => {
+      await getCurrentnews('/v2/everything', {q: query, language: lang})
         .then(response => {
           if(this.state.listCat.indexOf(query.toLowerCase()) > -1 ){
             this.setState({
@@ -108,7 +115,6 @@ class Headlines extends PureComponent{
     return(
 			<Container style={{backgroundColor:'#fff'}}>
 
-				
       	<Content>
 					<View>
 						<Text style={styles.news}>Breaking News</Text>
@@ -128,12 +134,6 @@ class Headlines extends PureComponent{
           <CarouselSlider articlesData={this.state.Voyage} SLIDER_WIDTH={SLIDER_WIDTH} ITEM_WIDTH={ITEM_WIDTH} _renderItem={_renderItem} Title={'Voyage'} />
           <CarouselSlider articlesData={this.state.films} SLIDER_WIDTH={SLIDER_WIDTH} ITEM_WIDTH={ITEM_WIDTH} _renderItem={_renderItem} Title={'Films'} />
 				</Content>
-
-            
-
-
-
-
 
         <ArticleModal 
           showModal={this.state.modalVisibility}

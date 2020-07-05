@@ -13,14 +13,11 @@ const Newslist = ({articleImg, ArticleTitle, ArticleDesc, ArticleUrl, onPressArt
   }
   function handleShare(){
     console.log(ArticleTitle)
-    const  data = {
-                    title: ArticleTitle, 
-                    url: ArticleUrl
-                  }
+    const  data = {title: ArticleTitle,url: ArticleUrl}
 		let message = `${data.title}\n\nRead More @${data.url}\n\nShared via RN News App`;
 		return Share.share(
 			{title: data.title , url: data.url},
-			{dialogTitle:`Share ${data.title}`}
+			{dialogTitle:`Share ${message}`}
 		);
 	}
   return (

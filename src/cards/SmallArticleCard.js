@@ -2,64 +2,61 @@ import React, { Component } from "react";
 import { StyleSheet, View, ImageBackground, TouchableOpacity, Share} from "react-native";
 import {Text} from 'native-base'
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { FontAwesome5 } from '@expo/vector-icons';
 import {LinearGradient  } from 'expo-linear-gradient'
+import {handleViewPress, handleShare} from '../config/functions';
 
+class SmallArticleCard extends Component{
 
-function SmallArticleCard({articleImg, ArticleTitle, ArticleDesc, ArticleUrl, onPressArt, style}) {
-
-	const img = `https://vl-media.fr/wp-content/uploads/2018/05/news.jpg`;
-
-	function handleViewPress(){
-		let url = ArticleUrl;
-		let title = ArticleTitle;
-		onPressArt({url, title})
+	constructor(props) {
+		super(props)
+		this.handleViewPress = () => {
+      handleViewPress(this.props.ArticleUrl, this.props.ArticleTitle, this.props.onPressArt)
+    }
+    this.handleShare = () => {
+      handleShare(this.props.ArticleUrl, this.props.ArticleTitle)
+    }
 	}
 
-	function handleShare(){
-		// console.log(ArticleTitle)
-		const  data = {
-										title: ArticleTitle, 
-										url: ArticleUrl
-									}
-		let message = `${data.title}\n\nRead More @${data.url}\n\nShared via RN News App`;
-		return Share.share(
-			{title: data.title , url: data.url},
-			{dialogTitle:`Share ${message}`}
+	render() {
+		const {articleImg, ArticleTitle, ArticleDesc, style} = this.props;
+		const img = `https://vl-media.fr/wp-content/uploads/2018/05/news.jpg`;
+		return (
+			
+			<View style={[styles.container, style]}>
+				<ImageBackground
+					source={{uri : `${articleImg ? articleImg : img}`}}
+					resizeMode="cover"
+					style={styles.image}
+					imageStyle={styles.image_imageStyle}
+				>
+					<LinearGradient
+						colors={["#09203f", "#537895"]}
+						start={{x: 0, y: 1}} end={{x: 0, y: 0}}
+						style={styles.linearGradient}
+					>
+						<TouchableOpacity style={[styles.Touchb, {marginRight: 15, marginLeft: 'auto'}]} onPress={this.handleShare}>
+							<FontAwesome5 name="bookmark" size={30} color="rgba(240,91,91,1)" />
+						</TouchableOpacity>
+						<View style={styles.rect}>
+							<Text style={styles.loremIpsum} note numberOfLines={4}>
+								{ArticleTitle}
+							</Text>
+						</View>
+						<View style={styles.actionArea}>
+							<TouchableOpacity style={[styles.Touchb, styles.btnIcon1]} onPress={this.handleShare}>
+								<MaterialCommunityIcons name="share" style={styles.caption} />
+							</TouchableOpacity>
+							<TouchableOpacity style={[styles.Touchb, styles.btnIcon2]} onPress={this.handleViewPress}>
+								<MaterialCommunityIcons name="open-in-new" style={styles.caption} />
+							</TouchableOpacity>
+						</View>
+					</LinearGradient>
+				</ImageBackground>
+			</View>
+			
 		);
 	}
-  return (
-		
-    <View style={[styles.container, style]}>
-		
-      <ImageBackground
-							source={{uri : `${articleImg ? articleImg : img}`}}
-							resizeMode="cover"
-							style={styles.image}
-							imageStyle={styles.image_imageStyle}
-						>
-				<LinearGradient
-					colors={["#09203f", "#537895"]}
-          start={{x: 0, y: 1}} end={{x: 0, y: 0}}
-					style={styles.linearGradient}
-				>
-					<View style={styles.rect}>
-						<Text style={styles.loremIpsum} note numberOfLines={4}>
-							{ArticleTitle}
-						</Text>
-					</View>
-					<View style={styles.actionArea}>
-						<TouchableOpacity style={[styles.Touchb, styles.btnIcon1]} onPress={handleShare}>
-							<MaterialCommunityIcons name="share" style={styles.caption} />
-						</TouchableOpacity>
-						<TouchableOpacity style={[styles.Touchb, styles.btnIcon2]} onPress={handleViewPress}>
-							<MaterialCommunityIcons name="open-in-new" style={styles.caption} />
-						</TouchableOpacity>
-					</View>
-				</LinearGradient>
-      </ImageBackground>
-    </View>
-		
-  );
 }
 
 const styles = StyleSheet.create({
@@ -84,7 +81,7 @@ const styles = StyleSheet.create({
     width: '90%',
     height: 70,
     backgroundColor: "#000",
-    marginTop: 140,
+    marginTop: 100,
 		alignContent: 'center',
 		alignItems: 'center',
 		// justifyContent: 'center',
@@ -137,7 +134,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
 		alignItems: 'center',
 		borderRadius: 15
-  },
+	},
+	SaveIcon: {
+		fontSize: 40,
+		color: '#fff',
+		fontWeight: 'bold'
+	}
 });
 
 export default SmallArticleCard;

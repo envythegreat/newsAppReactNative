@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
-import { StyleSheet, Image, FlatList, Dimensions, View} from 'react-native';
+import { StyleSheet, Image, FlatList, Dimensions, View, Platform} from 'react-native';
 import {Container, Header, Left, Body, Right, Button,Content } from 'native-base';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import {getCurrentnews} from '../config/functions'
+import {getCurrentnews, handleArticleOnPress, handleModalClose} from '../config/functions'
 // import { Country } from '../config/listCountry';
 import SmallArticleCard from '../cards/SmallArticleCard'
 // import Header from '../components/Header'
@@ -32,14 +32,12 @@ class  MoreNews extends Component {
           articles: response.articles,
           isStillLoading: false,
         })
-        // console.log(this.state.articles)
       }).catch(err => {
           console.log('current error', err);
       });
     }
   }
   componentDidMount() {
-    // console.log(this.props.route.params.params);
     const {Country, path} = this.props.route.params.params.countryData;
     getCurrentnews(path, {country: Country, pageSize:30})
       .then(response => {
@@ -47,26 +45,12 @@ class  MoreNews extends Component {
           articles: response.articles,
           isStillLoading: false,
         })
-        // console.log(this.state.articles)
       }).catch(err => {
           console.log('current error', err);
       });
     }
-    handleArticleOnPress = (dataArticle) => {
-      this.setState({
-        modalVisibility: true,
-        articleData: dataArticle
-      })
-    }
 
-    handleModalClose = () => {
-      this.setState({
-        modalVisibility: false,
-        articleData: {}
-      })
-    }
   render(){
-    // const {Country} = this.props.route.params.params;
     const newsList = ({item, index}) => {
       return <SmallArticleCard 
               articleImg={item.urlToImage}
@@ -74,8 +58,13 @@ class  MoreNews extends Component {
               ArticleDesc={item.description ? item.description : item.content}
               ArticleUrl={item.url}
               key={index}
-              onPressArt={this.handleArticleOnPress}
-              style={{width: ITEM_WIDTH, height: ITEM_HEIGHT}}
+              onPressArt={handleArticleOnPress}
+              style={
+                {
+                  width: Platform.OS === 'ios' ? ITEM_WIDTH : ITEM_WIDTH - 10,
+                  height: Platform.OS === 'ios' ? ITEM_HEIGHT : ITEM_HEIGHT - 20,
+                }
+              }
             />
     }
     return (
@@ -107,6 +96,7 @@ class  MoreNews extends Component {
               renderItem={newsList}
               numColumns={2}
               keyExtractor={(item, index) => 'key'+index}
+              style={{marginBottom: 130}}
             />
           </View>
             
@@ -121,7 +111,7 @@ export default MoreNews;
 
 const styles = StyleSheet.create({
   logImg: {
-    width: 60,
+    width: Platform.OS === 'ios' ? 70 : 130,
     height: 60,
     overflow: 'visible',
     backgroundColor: 'transparent',
