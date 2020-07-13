@@ -1,15 +1,18 @@
-import React, { Component } from "react";
+import React, { Component, PureComponent } from "react";
 import { StyleSheet, View, ImageBackground, TouchableOpacity, Share} from "react-native";
 import {Text} from 'native-base'
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { FontAwesome5 } from '@expo/vector-icons';
+import { FontAwesome5, FontAwesome } from '@expo/vector-icons';
 import {LinearGradient  } from 'expo-linear-gradient'
-import {handleViewPress, handleShare} from '../config/functions';
+import {handleViewPress, handleShare, SetArticles} from '../config/functions';
 
-class SmallArticleCard extends Component{
+class SmallArticleCard extends PureComponent{
 
 	constructor(props) {
 		super(props)
+		this.state = {
+      icon: <FontAwesome5 name="bookmark" size={30} color="rgba(240,91,91,1)" />,
+    }
 		this.handleViewPress = () => {
       handleViewPress(this.props.ArticleUrl, this.props.ArticleTitle, this.props.onPressArt)
     }
@@ -19,8 +22,15 @@ class SmallArticleCard extends Component{
 	}
 
 	render() {
-		const {articleImg, ArticleTitle, ArticleDesc, style} = this.props;
-		const img = `https://vl-media.fr/wp-content/uploads/2018/05/news.jpg`;
+		const {articleImg, ArticleTitle, ArticleDesc, ArticleUrl, style} = this.props;
+		const img = articleImg ? articleImg : `https://vl-media.fr/wp-content/uploads/2018/05/news.jpg`;
+		const _SaveArticle =  () => {
+			const article = {Image: img, Title: ArticleTitle, Desc: ArticleDesc, Url: ArticleUrl}
+			SetArticles(article);
+			this.setState({
+        icon: <FontAwesome name="bookmark" size={30} color="rgba(240,91,91,1)" />
+      })
+		}
 		return (
 			
 			<View style={[styles.container, style]}>
@@ -35,8 +45,8 @@ class SmallArticleCard extends Component{
 						start={{x: 0, y: 1}} end={{x: 0, y: 0}}
 						style={styles.linearGradient}
 					>
-						<TouchableOpacity style={[styles.Touchb, {marginRight: 15, marginLeft: 'auto'}]} onPress={this.handleShare}>
-							<FontAwesome5 name="bookmark" size={30} color="rgba(240,91,91,1)" />
+						<TouchableOpacity style={[styles.Touchb, {marginRight: 15, marginLeft: 'auto'}]} onPress={_SaveArticle}>
+							{this.state.icon}
 						</TouchableOpacity>
 						<View style={styles.rect}>
 							<Text style={styles.loremIpsum} note numberOfLines={4}>

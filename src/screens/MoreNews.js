@@ -1,11 +1,10 @@
 import React, {Component} from 'react';
 import { StyleSheet, Image, FlatList, Dimensions, View, Platform} from 'react-native';
-import {Container, Header, Left, Body, Right, Button,Content } from 'native-base';
+import {Container, Header, Left, Right, Button } from 'native-base';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import {getCurrentnews, handleArticleOnPress, handleModalClose} from '../config/functions'
-// import { Country } from '../config/listCountry';
+import ArticleModal from '../modal/ArticleModal'
 import SmallArticleCard from '../cards/SmallArticleCard'
-// import Header from '../components/Header'
 
 
 // ({route, navigation})
@@ -19,7 +18,11 @@ class  MoreNews extends Component {
     this.state = {
       articles: {},
       isStillLoading: true,
+      modalVisibility :  false,
+			articleData : {},
     }
+    this.handleArticleOnPress = handleArticleOnPress.bind(this);
+    this.handleModalClose = handleModalClose.bind(this);
   }
   componentDidUpdate(prevProps) {
     const oldData = prevProps.route.params.params.countryData;
@@ -58,7 +61,7 @@ class  MoreNews extends Component {
               ArticleDesc={item.description ? item.description : item.content}
               ArticleUrl={item.url}
               key={index}
-              onPressArt={handleArticleOnPress}
+              onPressArt={this.handleArticleOnPress}
               style={
                 {
                   width: Platform.OS === 'ios' ? ITEM_WIDTH : ITEM_WIDTH - 10,
@@ -101,6 +104,11 @@ class  MoreNews extends Component {
           </View>
             
           {/* </Content> */}
+          <ArticleModal 
+            showModal={this.state.modalVisibility}
+            articleData={this.state.articleData}
+            onClose={this.handleModalClose}
+          />
         </Container>  
       </>
     );

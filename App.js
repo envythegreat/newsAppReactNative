@@ -14,7 +14,7 @@ import Countries from './src/Tabs/Countries';
 import Today from './src/Tabs/Today';
 import MoreNews from './src/screens/MoreNews'
 import Search from './src/Tabs/Search'
-
+import SavedArt from './src/Tabs/SavedArt'
 // import RootStackScreen from './src/config/RootStackScreen';
 
 const Tab = createBottomTabNavigator();
@@ -110,6 +110,16 @@ class App extends Component {
                   tabBarLabel: 'Search',
                   tabBarIcon: ({ color, size }) => (
                     <Ionicons name="md-search" size={size} color={color} />
+                  ),
+                }}
+              />
+              <Tab.Screen
+                name="Saved"
+                component={SavedArt} 
+                options={{
+                  tabBarLabel: 'Saved',
+                  tabBarIcon: ({ color, size }) => (
+                    <MaterialCommunityIcons name="bookmark" size={size} color={color} />
                   ),
                 }}
               />

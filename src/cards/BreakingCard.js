@@ -1,14 +1,16 @@
-import React, { Component } from "react";
+import React, { Component, PureComponent } from "react";
 import { StyleSheet, View, ImageBackground, TouchableOpacity, Share, Platform } from "react-native";
 import {Text} from 'native-base'
-import { FontAwesome5 } from '@expo/vector-icons';
+import { FontAwesome5, FontAwesome } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import {handleViewPress, handleShare} from '../config/functions';
+import {handleViewPress, handleShare, SetArticles} from '../config/functions';
 
-
-class BreakingCard extends Component {
+class BreakingCard extends PureComponent {
   constructor(props){
     super(props)
+    this.state = {
+      icon: <FontAwesome5 name="bookmark" size={30} color="rgba(240,91,91,1)" />,
+    }
     this.handleViewPress = () => {
       handleViewPress(this.props.ArticleUrl, this.props.ArticleTitle, this.props.onPressArt)
     }
@@ -16,23 +18,16 @@ class BreakingCard extends Component {
       handleShare(this.props.ArticleUrl, this.props.ArticleTitle)
     }
   }
-
-  // function handleViewPress(){
-  //   let url = ArticleUrl;
-  //   let title = ArticleTitle;
-  //   onPressArt({url, title})
-  // }
-  // function handleShare(){
-  //   const  data = {title: ArticleTitle, url: ArticleUrl}
-	// 	let message = `${data.title}\n\nRead More @${data.url}\n\nShared via RN News App`;
-	// 	return Share.share(
-	// 		{title: data.title , url: data.url},
-	// 		{dialogTitle:`Share ${message}`}
-	// 	);
-  // }
   render() {
-    const {articleImg, ArticleTitle, ArticleDesc} = this.props;
+    const {articleImg, ArticleTitle, ArticleDesc, ArticleUrl} = this.props;
     const img = articleImg ? articleImg : `https://vl-media.fr/wp-content/uploads/2018/05/news.jpg`;
+    const _SaveArticle =  () => {
+      const article = {Image: img, Title: ArticleTitle, Desc: ArticleDesc, Url: ArticleUrl}
+      SetArticles(article);
+      this.setState({
+        icon: <FontAwesome name="bookmark" size={30} color="rgba(240,91,91,1)" />
+      })
+    }
     return (
       <View style={styles.container}>
         <ImageBackground
@@ -50,8 +45,8 @@ class BreakingCard extends Component {
             </View>
           </View>
 
-            <TouchableOpacity style={[styles.SaveBtn, {marginLeft: 'auto'}]} onPress={this.handleShare}>
-              <FontAwesome5 name="bookmark" size={30} color="rgba(240,91,91,1)" />
+            <TouchableOpacity style={[styles.SaveBtn, {marginLeft: 'auto'}]} onPress={_SaveArticle}>
+              {this.state.icon}
             </TouchableOpacity>
 
           <View style={styles.group4}>

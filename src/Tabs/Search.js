@@ -1,8 +1,9 @@
-import React, {Component} from 'react'
-import {View, Dimensions, TouchableOpacity, Image, StyleSheet, FlatList} from 'react-native'
+import React, {Component} from 'react';
+import {View, Dimensions, TouchableOpacity, Image, StyleSheet, FlatList} from 'react-native';
 import { Container, Header, Item, Input, Icon, Button, Text, Left, Content } from 'native-base';
-import {getCurrentnews} from '../config/functions'
-import SmallArticleCard from '../cards/SmallArticleCard'
+import {getCurrentnews, handleArticleOnPress, handleModalClose} from '../config/functions';
+import SmallArticleCard from '../cards/SmallArticleCard';
+import ArticleModal from '../modal/ArticleModal'
 
 
 const SLIDER_WIDTH = Dimensions.get('window').width;
@@ -18,7 +19,11 @@ class Search extends Component {
 			search: null,
 			articles: {},
 			isStillLoading: true,
+			modalVisibility :  false,
+			articleData: {}
 		}
+		this.handleArticleOnPress = handleArticleOnPress.bind(this);
+    this.handleModalClose = handleModalClose.bind(this);
 	}
 
 	handleSearch = (search) => {
@@ -29,14 +34,14 @@ class Search extends Component {
 
 	onPreformSearch = () => {
 		getCurrentnews('/v2/everything', {q: this.state.search, pageSize:30})
-      .then(response => {
-        this.setState({
-          articles: response.articles,
-          isStillLoading: false,
-        })
-        console.log(this.state.articles.length)
-      }).catch(err => {
-          console.log('current error', err);
+	  .then(response => {
+		this.setState({
+		  articles: response.articles,
+		  isStillLoading: false,
+		})
+		console.log(this.state.articles.length)
+	  }).catch(err => {
+		  console.log('current error', err);
 			}
 		);
 	}
@@ -47,7 +52,7 @@ class Search extends Component {
 						ArticleDesc={item.description ? item.description : item.content}
 						ArticleUrl={item.url}
 						key={index}
-						// onPressArt={this.handleArticleOnPress}
+						onPressArt={this.handleArticleOnPress}
 						style={{width: ITEM_WIDTH, height: ITEM_HEIGHT}}
 					/>
 	}
@@ -76,16 +81,21 @@ class Search extends Component {
 		}
 		return (
 			<Container>
-        <Header searchBar rounded style={{backgroundColor: '#fff', height: 100}}>
-          <Item>
-          	<Input placeholder="Business, Entertainment, Politices, Games, Sport ...." style={{marginLeft: 15}} value={this.state.search} onChangeText={this.handleSearch} editable={true} />
+			<Header searchBar rounded style={{backgroundColor: '#fff', height: 100}}>
+		  <Item>
+		  	<Input placeholder="Business, Entertainment, Politices, Games, Sport ...." style={{marginLeft: 15}} value={this.state.search} onChangeText={this.handleSearch} editable={true} />
 						<TouchableOpacity onPress={this.onPreformSearch}>
 							<Icon name="ios-search" />
 						</TouchableOpacity>
-          </Item>
-        </Header>
+		  </Item>
+			</Header>
 					{newsArea}
-      </Container>
+					<ArticleModal 
+          showModal={this.state.modalVisibility}
+          articleData={this.state.articleData}
+          onClose={this.handleModalClose}
+        />
+	  	</Container>
 		);
 	}
 

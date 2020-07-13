@@ -1,5 +1,7 @@
 import getNews from './Api'
 import {Share} from 'react-native'
+import AsyncStorage from '@react-native-community/async-storage';
+
 export function getCurrentnews (path,{country, category, source, q, from, to, pageSize, language}){
   return getNews(path, {country, category, source, q, from, to, pageSize, language})
     .then(response => response.json())
@@ -47,4 +49,43 @@ export function handleShare(ArticleTitle, ArticleUrl){
 		{title: data.title , url: data.url},
 		{dialogTitle:`Share ${message}`}
 	);
+}
+
+export async function SetArticles(article) {
+	try{
+		await AsyncStorage.getItem('@Articles', async (err, result) =>  {
+			console.log(result)
+			if(result !== null) {
+				try{
+					let newData = JSON.parse(result);
+					let last = newData.slice(-1)[0];
+					article.id = last.id + 1;
+					newData.push(article);
+					await AsyncStorage.setItem('@Articles', JSON.stringify(newData));
+					console.log(newData);
+				} catch (e){
+					console.log(`Something goes wrong : ${e}`);
+				}
+			} else {
+				console.log('Data Not Found');
+				article.id = 1;
+				let myData = [
+					article
+				]
+				await AsyncStorage.setItem('@Articles', JSON.stringify(myData))
+				// console.log(myData);
+			}
+		})
+	} catch (e) {
+		console.log(`Something goes wrong 1 : ${e}`);
+	}
+	// await AsyncStorage.removeItem('@Articles');
+}
+
+export async function getSavedArtciles() {
+	try{
+		return await AsyncStorage.getItem('@Articles');
+	} catch(e) {
+		console.log(`Something goes Wrong : ${e}`);
+	}
 }
