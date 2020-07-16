@@ -1,6 +1,12 @@
 import React from 'react';
 import { StyleSheet} from 'react-native';
-import { Container,Content, List } from 'native-base';
+
+import {
+  Container,
+  Content,
+  List
+} from 'native-base';
+
 import { Country } from '../config/listCountry';
 import Countrylist from '../components/Countrylist';
 import Header from '../components/Header'
@@ -12,7 +18,8 @@ import Header from '../components/Header'
 
 export default function Countries({navigation}) {
   const MyCountryList = Country.map((item, index) => {
-    return <Countrylist name={item.Name} icon={item.icon} code={item.Code} key={index} navigation={navigation} lang={item.lang}/>
+    // map over the country list then display them to the screen
+      return <Countrylist name={item.Name} icon={item.icon} code={item.Code} key={index} navigation={navigation} lang={item.lang}/>
   })
   return (
       // <SafeAreaView>

@@ -1,13 +1,34 @@
 import React, {Component} from 'react';
-import { StyleSheet, Image, FlatList, Dimensions, View, Platform} from 'react-native';
-import {Container, Header, Left, Right, Button } from 'native-base';
+
+import {
+  StyleSheet,
+  Image,
+  FlatList,
+  Dimensions,
+  View,
+  Platform
+} from 'react-native';
+
+import {
+  Container,
+  Header,
+  Left,
+  Right,
+  Button
+} from 'native-base';
+
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import {getCurrentnews, handleArticleOnPress, handleModalClose} from '../config/functions'
+
+import {
+  getCurrentnews,
+  handleArticleOnPress,
+  handleModalClose
+} from '../config/functions'
+
 import ArticleModal from '../modal/ArticleModal'
 import SmallArticleCard from '../cards/SmallArticleCard'
 
 
-// ({route, navigation})
 const SLIDER_WIDTH = Dimensions.get('window').width;
 const ITEM_WIDTH = Math.round(SLIDER_WIDTH * 0.7) - 85;
 const ITEM_HEIGHT = Math.round(ITEM_WIDTH * 3 / 4) *1.9;
@@ -21,10 +42,15 @@ class  MoreNews extends Component {
       modalVisibility :  false,
 			articleData : {},
     }
+    // check the headLines Component ./src/component/headelines.js => constructor -> under state
     this.handleArticleOnPress = handleArticleOnPress.bind(this);
     this.handleModalClose = handleModalClose.bind(this);
   }
+
+
   componentDidUpdate(prevProps) {
+    // before we update the component we need to make sure that the new data is 
+    // not the same as the old data to avoid breaking the app or re-fetching data
     const oldData = prevProps.route.params.params.countryData;
     const newData = this.props.route.params.params.countryData;
     if(newData && oldData !== newData) {
@@ -40,7 +66,9 @@ class  MoreNews extends Component {
       });
     }
   }
+
   componentDidMount() {
+    // load data the screen based on the parameters passed on navigation params
     const {Country, path} = this.props.route.params.params.countryData;
     getCurrentnews(path, {country: Country, pageSize:30})
       .then(response => {
@@ -64,6 +92,7 @@ class  MoreNews extends Component {
               onPressArt={this.handleArticleOnPress}
               style={
                 {
+                  // check the Platform os before applying any styles the component
                   width: Platform.OS === 'ios' ? ITEM_WIDTH : ITEM_WIDTH - 10,
                   height: Platform.OS === 'ios' ? ITEM_HEIGHT : ITEM_HEIGHT - 20,
                 }

@@ -8,7 +8,8 @@ import {handleViewPress, handleShare} from '../config/functions';
 class Swipble extends Component{
 
   constructor(props){
-    super(props);
+		super(props);
+		
     this.handleRemoveArticle = () => {this.props.handleRemoveArticle(this.props.item.id)}
 
     this.handleViewPress = () => {

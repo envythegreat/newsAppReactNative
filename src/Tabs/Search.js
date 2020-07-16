@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
-import {View, Dimensions, TouchableOpacity, Image, StyleSheet, FlatList} from 'react-native';
-import { Container, Header, Item, Input, Icon, Button, Text, Left, Content } from 'native-base';
-import {getCurrentnews, handleArticleOnPress, handleModalClose} from '../config/functions';
+import {Dimensions, TouchableOpacity, FlatList, Platform} from 'react-native';
+import { Container, Header, Item, Input, Icon} from 'native-base';
+import {getCurrentnews, handleArticleOnPress, handleModalClose, Imgandtext} from '../config/functions';
 import SmallArticleCard from '../cards/SmallArticleCard';
 import ArticleModal from '../modal/ArticleModal'
 
@@ -26,6 +26,7 @@ class Search extends Component {
     this.handleModalClose = handleModalClose.bind(this);
 	}
 
+	// update the search satete based on the search input
 	handleSearch = (search) => {
 		this.setState({
 			search: search
@@ -35,34 +36,42 @@ class Search extends Component {
 	onPreformSearch = () => {
 		getCurrentnews('/v2/everything', {q: this.state.search, pageSize:30})
 	  .then(response => {
-		this.setState({
-		  articles: response.articles,
-		  isStillLoading: false,
-		})
-		console.log(this.state.articles.length)
+			this.setState({
+		  	articles: response.articles,
+		  	isStillLoading: false,
+			})
+			console.log(this.state.articles.length)
 	  }).catch(err => {
-		  console.log('current error', err);
+		  	console.log('current error', err);
 			}
 		);
 	}
+
+	// item to be rendered inside the flatList
+	// SmallArticleCard is a component ....
 	_rendredItem = ({item, index}) => {
-		return <SmallArticleCard 
-						articleImg={item.urlToImage}
-						ArticleTitle={item.title}
-						ArticleDesc={item.description ? item.description : item.content}
-						ArticleUrl={item.url}
-						key={index}
-						onPressArt={this.handleArticleOnPress}
-						style={{width: ITEM_WIDTH, height: ITEM_HEIGHT}}
-					/>
+		return 	<SmallArticleCard 
+							articleImg={item.urlToImage}
+							ArticleTitle={item.title}
+							ArticleDesc={item.description ? item.description : item.content}
+							ArticleUrl={item.url}
+							key={index}
+							onPressArt={this.handleArticleOnPress}
+							style={
+                {
+                  // check the Platform os before applying any styles the component
+                  width: Platform.OS === 'ios' ? ITEM_WIDTH : ITEM_WIDTH - 10,
+                  height: Platform.OS === 'ios' ? ITEM_HEIGHT : ITEM_HEIGHT - 20,
+                }
+              }
+						/>
 	}
 	render() {
+		// variable that hold the data we are going to display to the user based on 
+		// states of the component if the component is loading or the data is hmm true (loaded) 
 		let newsArea;
 		if(this.state.isStillLoading) {
-			newsArea = <View style={styles.Content} >
-									<Image source={require('../assets/img/search.png')} style={styles.searchImg} />
-									<Text style={styles.PaText} >Search for more News on your own</Text>
-								</View>;
+			newsArea = 	Imgandtext(require('../assets/img/search.png'), 'Search for more News on your own');
 		} else {
 			if (this.state.articles && this.state.articles.length > 0) {
 				newsArea = <FlatList 
@@ -72,29 +81,38 @@ class Search extends Component {
 										keyExtractor={(item, index) => 'key'+index}
 									/>
 			} else if (!this.state.articles.length) {
-				newsArea = <View style={styles.Content} >
-										{/* <Icon name="ios-search"  style={styles.ICon} /> */}
-										<Image source={require('../assets/img/nodata.png')} style={styles.searchImg} />
-										<Text style={styles.PaText} >Something Wrong Please Use another Key Search</Text>
-									</View>;
+				newsArea = Imgandtext(require('../assets/img/nodata.png'), 'Something Wrong Please Use another Key Search');
 			}
 		}
 		return (
 			<Container>
 			<Header searchBar rounded style={{backgroundColor: '#fff', height: 100}}>
+
+			{/** The search item*/}
 		  <Item>
-		  	<Input placeholder="Business, Entertainment, Politices, Games, Sport ...." style={{marginLeft: 15}} value={this.state.search} onChangeText={this.handleSearch} editable={true} />
+		  	<Input 	placeholder="Business, Entertainment, Politices, Games, Sport ...." 
+								style={{marginLeft: 15}} value={this.state.search} 
+								//change the value of an item in the state every time a user start typing
+								onChangeText={this.handleSearch} 
+								editable={true} 
+							/>
 						<TouchableOpacity onPress={this.onPreformSearch}>
 							<Icon name="ios-search" />
 						</TouchableOpacity>
 		  </Item>
+
 			</Header>
+
 					{newsArea}
-					<ArticleModal 
-          showModal={this.state.modalVisibility}
-          articleData={this.state.articleData}
-          onClose={this.handleModalClose}
-        />
+					<ArticleModal
+						// props
+						// this to dipslay the articles webview true / false 
+          	showModal={this.state.modalVisibility}
+						// data Articles
+          	articleData={this.state.articleData}
+						// close the webview
+          	onClose={this.handleModalClose}
+        	/>
 	  	</Container>
 		);
 	}
@@ -102,24 +120,3 @@ class Search extends Component {
 }
 
 export default Search;
-
-const styles = StyleSheet.create({
-	Content: {
-		backgroundColor: 'transparent',
-		alignItems: 'center',
-		flex: 1,
-		marginTop: 100
-	},
-  ICon: {
-		fontSize: 150,
-		opacity: 0.8
-	},
-	PaText: {
-		opacity: 0.5
-	},
-	searchImg: {
-		// width: 200,
-		marginBottom: 30,
-		marginRight: 20
-	}
-});

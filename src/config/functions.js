@@ -1,11 +1,19 @@
 import getNews from './Api'
-import {Share} from 'react-native'
+import React from 'react'
+import {Share, View, Image, Text, StyleSheet} from 'react-native'
 import AsyncStorage from '@react-native-community/async-storage';
 
+
+// const NewsContext = React.createContext();
+// export const Provider = NewsContext.Provider;
+// export const Consumer = NewsContext.Consumer;
+
+// function to that return a promise based on another function to get news
 export function getCurrentnews (path,{country, category, source, q, from, to, pageSize, language}){
   return getNews(path, {country, category, source, q, from, to, pageSize, language})
     .then(response => response.json())
 }
+// append zore to number
 export function appendZero (n){
 	if (n <= 9) {
 		return "0" + n;
@@ -13,6 +21,7 @@ export function appendZero (n){
 	return n;
 }
 
+// get exact time based on today and the day u want
 export function getTime({minusdays}){
 	const currentDate = new Date();
 	if(minusdays) {
@@ -42,6 +51,7 @@ export function handleViewPress(ArticleUrl, ArticleTitle, onPressArt){
 	let title = ArticleTitle;
 	onPressArt({url, title})
 }
+
 export function handleShare(ArticleTitle, ArticleUrl){
 	const data = {title: ArticleTitle, url: ArticleUrl}
 	let message = `${data.title}\n\nRead More @${data.url}\n\nShared via RN News App`;
@@ -89,3 +99,33 @@ export async function getSavedArtciles() {
 		console.log(`Something goes Wrong : ${e}`);
 	}
 }
+
+// load the UI of search Tab in no data is hmm true (no data loaded) 
+export function Imgandtext(img, text){
+	return <View style={styles.Content} >
+					<Image source={img} style={styles.searchImg} />
+					<Text style={styles.PaText} >{text}</Text>
+				</View>
+}
+
+
+const styles = StyleSheet.create({
+	Content: {
+		backgroundColor: 'transparent',
+		alignItems: 'center',
+		flex: 1,
+		marginTop: 100
+	},
+  ICon: {
+		fontSize: 150,
+		opacity: 0.8
+	},
+	PaText: {
+		opacity: 0.5
+	},
+	searchImg: {
+		// width: 200,
+		marginBottom: 30,
+		marginRight: 20
+	}
+});
