@@ -27,7 +27,7 @@ import {
 
 import ArticleModal from '../modal/ArticleModal'
 import SmallArticleCard from '../cards/SmallArticleCard'
-
+import {SmallLoader} from '../loader/Loader'
 
 const SLIDER_WIDTH = Dimensions.get('window').width;
 const ITEM_WIDTH = Math.round(SLIDER_WIDTH * 0.7) - 85;
@@ -40,7 +40,8 @@ class  MoreNews extends Component {
       articles: {},
       isStillLoading: true,
       modalVisibility :  false,
-			articleData : {},
+      articleData : {},
+      loader: [{'id':1},{'id':2},{'id':3},{'id':4},{'id':5},{'id':6}]
     }
     // check the headLines Component ./src/component/headelines.js => constructor -> under state
     this.handleArticleOnPress = handleArticleOnPress.bind(this);
@@ -80,8 +81,21 @@ class  MoreNews extends Component {
           console.log('current error', err);
       });
     }
+    _loader = ({item,index}) => {
+      return (
+        <SmallLoader title={item.id} key={index} style={
+          {
+            width: Platform.OS === 'ios' ? ITEM_WIDTH : ITEM_WIDTH - 10,
+            height: Platform.OS === 'ios' ? ITEM_HEIGHT : ITEM_HEIGHT - 20,
+            marginHorizontal: 5,
+          }
+        }/>
+      );
+    }
 
   render(){
+
+
     const newsList = ({item, index}) => {
       return <SmallArticleCard 
               articleImg={item.urlToImage}
@@ -123,13 +137,26 @@ class  MoreNews extends Component {
           </Header>
           {/* <Content> */}
           <View>
-            <FlatList
-              data={this.state.articles}
-              renderItem={newsList}
+          {this.state.isStillLoading ? (
+              <FlatList 
+              data={this.state.loader}
+              renderItem={this._loader}
               numColumns={2}
               keyExtractor={(item, index) => 'key'+index}
-              style={{marginBottom: 130}}
+              style={{marginTop: 20}}
+              // scrollEnabled={false}
             />
+            ) : (
+              <FlatList
+                data={this.state.articles}
+                renderItem={newsList}
+                numColumns={2}
+                keyExtractor={(item, index) => 'key'+index}
+                style={{marginBottom: 130}}
+              />
+            )
+            }
+            
           </View>
             
           {/* </Content> */}

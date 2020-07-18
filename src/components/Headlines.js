@@ -6,6 +6,8 @@ import BreakingCard from '../cards/BreakingCard'
 import SmallArticleCard from '../cards/SmallArticleCard';
 import CarouselSlider from './CarouselSlider'
 import {getCurrentnews, handleArticleOnPress, handleModalClose} from '../config/functions';
+import {Loader, SmallLoader} from '../loader/Loader'
+
 
 const SLIDER_WIDTH = Dimensions.get('window').width;
 const ITEM_WIDTH = Math.round(SLIDER_WIDTH * 0.7);
@@ -31,7 +33,8 @@ class Headlines extends PureComponent{
           'politique',
           'voyage',
           'films'
-        ]
+        ],
+        loader: [1,2,3,4,5,6]
       }
       // i was hard stuck at this trying to call those function and i keep getting this error : 
       // undefined is not an object (evaluating 'this.setstate')
@@ -55,8 +58,8 @@ class Headlines extends PureComponent{
         }).catch(err => {
             console.log('current error', err);
         });
-      this.preformSearch('lifeStyles', 'fr');
-      this.preformSearch('politique', 'fr');
+      this.preformSearch('lifeStyles', 'en');
+      this.preformSearch('politique', 'en');
       this.preformSearch('Voyage', 'fr');
       this.preformSearch('films', 'fr');
     }
@@ -88,17 +91,24 @@ class Headlines extends PureComponent{
           console.log('current error', err);
         });
     }		
-
+  _loader = ({item,index}) => {
+    return (
+      <SmallLoader title={item} style={{width:ITEM_WIDTH, height: ITEM_HEIGHT+70}}/>
+    );
+  }
   render() {
 		if (this.state.stillLoading) {
 			return (
-				<Container style={{backgroundColor:'#696969'}}>
-        <Content style={{backgroundColor:'#696969'}}>
-          <Image source={require('../assets/img/ez.gif')} style={{flex: 1, width: '100%', marginVertical:10}}/>
-          <Image source={require('../assets/img/ez.gif')} style={{flex: 1, width: '100%', marginVertical:10}}/>
-				</Content>
-			</Container>
-			)
+        <Container style={{backgroundColor:'#fff'}}>
+          <Content>
+            <View>
+              <Text style={styles.news}>Breaking News</Text>
+            </View>
+            <Loader/>
+            <CarouselSlider articlesData={this.state.loader} SLIDER_WIDTH={SLIDER_WIDTH} ITEM_WIDTH={ITEM_WIDTH} _renderItem={this._loader} Title={'Top Stories'} />
+          </Content>
+        </Container>
+			);
     }
     
 		const	_renderItem = ({item,index}) => {
