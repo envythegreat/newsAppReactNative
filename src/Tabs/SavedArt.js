@@ -1,12 +1,33 @@
 import React, {Component} from 'react';
-import {Image, StyleSheet, View, Alert} from 'react-native';
-import {Container, Header, Left, Right, Button, Text, Content} from 'native-base';
+import {
+	Image,
+	StyleSheet,
+	View,
+	Alert
+} from 'react-native';
+
+import {
+	Container,
+	Header,
+	Left,
+	Right,
+	Button,
+	Text,
+	Content
+} from 'native-base';
+
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import {getSavedArtciles} from '../config/functions'
 import AsyncStorage from '@react-native-community/async-storage';
-import Swipble from '../components/Swipble'
-import ArticleModal from '../modal/ArticleModal'
-import {handleArticleOnPress, handleModalClose, Imgandtext} from '../config/functions';
+import Swipble from '../components/Swipble';
+import ArticleModal from '../modal/ArticleModal';
+
+import {
+	handleArticleOnPress,
+	handleModalClose,
+	Imgandtext
+} from '../config/functions';
+
 class SavedArt extends Component {
 	constructor(props){
 		super(props);

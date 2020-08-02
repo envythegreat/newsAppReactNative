@@ -1,3 +1,5 @@
+// function that handle the Api query based on the parameters given to it
+
 const APIKEY = '0c185e750d5a4013a07b51e1f99f36a0'
 function getNews(path,{country, category, source, q, from, to, pageSize, language}) {
     let data = '';

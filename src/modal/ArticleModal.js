@@ -1,7 +1,23 @@
 import React, {Component} from 'react';
-import {Dimensions, Modal, Share} from 'react-native';
+
+import {
+	Dimensions,
+	Modal,
+	Share
+} from 'react-native';
+
 import { WebView } from 'react-native-webview';
-import {Container, Header, Body, Left, Icon, Right, Title, Button } from 'native-base';
+
+import {
+	Container,
+	Header,
+	Body,
+	Left,
+	Icon,
+	Right,
+	Title,
+	Button
+} from 'native-base';
 
 const webViewHeight = Dimensions.get('window').height - 56;
 
@@ -10,6 +26,7 @@ class ArticleModal extends Component {
 	constructor(props){
 		super(props);
 	}
+	// button to share articles from inside the webview
 	handleShare = () => {
 		const {url, title} = this.props.articleData;
     let message = `${title}\n\nRead More @${url}\n\nShared via RN News App`;
@@ -18,6 +35,7 @@ class ArticleModal extends Component {
       {dialogTitle:`Share ${title}`}
     );
 	}
+	// close article
 	handleClose = () => {
 		return this.props.onClose();
 	}

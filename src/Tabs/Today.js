@@ -1,8 +1,10 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { Container } from "native-base";
-import Headlines from '../components/Headlines'
-import Header from '../components/Header'
+import Headlines from '../components/Headlines';
+import Header from '../components/Header';
+
+
 export default function Today() {
   return (
     <View style={{height:'100%'}}>

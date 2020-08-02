@@ -9,7 +9,7 @@ class Swipble extends Component{
 
   constructor(props){
 		super(props);
-		
+		// only god know how those things works 
     this.handleRemoveArticle = () => {this.props.handleRemoveArticle(this.props.item.id)}
 
     this.handleViewPress = () => {

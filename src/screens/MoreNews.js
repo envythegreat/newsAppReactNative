@@ -23,11 +23,11 @@ import {
   getCurrentnews,
   handleArticleOnPress,
   handleModalClose
-} from '../config/functions'
+} from '../config/functions';
 
-import ArticleModal from '../modal/ArticleModal'
-import SmallArticleCard from '../cards/SmallArticleCard'
-import {SmallLoader} from '../loader/Loader'
+import ArticleModal from '../modal/ArticleModal';
+import SmallArticleCard from '../cards/SmallArticleCard';
+import {SmallLoader} from '../loader/Loader';
 
 const SLIDER_WIDTH = Dimensions.get('window').width;
 const ITEM_WIDTH = Math.round(SLIDER_WIDTH * 0.7) - 85;

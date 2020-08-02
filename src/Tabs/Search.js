@@ -1,9 +1,29 @@
 import React, {Component} from 'react';
-import {Dimensions, TouchableOpacity, FlatList, Platform} from 'react-native';
-import { Container, Header, Item, Input, Icon} from 'native-base';
-import {getCurrentnews, handleArticleOnPress, handleModalClose, Imgandtext} from '../config/functions';
+
+import {
+	Dimensions,
+	TouchableOpacity,
+	FlatList,
+	Platform
+} from 'react-native';
+
+import {
+	Container,
+	Header,
+	Item,
+	Input,
+	Icon
+} from 'native-base';
+
+import {
+	getCurrentnews,
+	handleArticleOnPress,
+	handleModalClose,
+	Imgandtext
+} from '../config/functions';
+
 import SmallArticleCard from '../cards/SmallArticleCard';
-import ArticleModal from '../modal/ArticleModal'
+import ArticleModal from '../modal/ArticleModal';
 
 
 const SLIDER_WIDTH = Dimensions.get('window').width;
